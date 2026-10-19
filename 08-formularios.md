@@ -91,3 +91,66 @@ Formulários em React combinam elementos HTML, eventos e, frequentemente, estado
 - [React — Respondendo a eventos](https://react.dev/learn/responding-to-events)
 - [React — Reagindo à entrada com estado](https://react.dev/learn/reacting-to-input-with-state)
 - [MDN — Elemento form](https://developer.mozilla.org/docs/Web/HTML/Element/form)
+
+## Exemplos adicionais de código
+
+### Exemplo 1 — Formulário controlado com envio
+~~~jsx
+import { useState } from "react";
+
+function FormularioNome() {
+  const [nome, setNome] = useState("");
+
+  function enviar(evento) {
+    evento.preventDefault();
+    alert(`Olá, ${nome}!`);
+  }
+
+  return (
+    <form onSubmit={enviar}>
+      <label>
+        Nome
+        <input value={nome} onChange={(evento) => setNome(evento.target.value)} required />
+      </label>
+      <button type="submit">Enviar</button>
+    </form>
+  );
+}
+~~~
+
+### Exemplo 2 — Campo de e-mail com validação nativa
+~~~jsx
+function FormularioEmail() {
+  return (
+    <form onSubmit={(evento) => {
+      evento.preventDefault();
+      alert("E-mail enviado!");
+    }}>
+      <label htmlFor="email">E-mail</label>
+      <input id="email" name="email" type="email" required />
+      <button type="submit">Cadastrar</button>
+    </form>
+  );
+}
+~~~
+
+### Exemplo 3 — Caixa de seleção controlada
+~~~jsx
+import { useState } from "react";
+
+function Preferencias() {
+  const [aceitou, setAceitou] = useState(false);
+
+  return (
+    <label>
+      <input
+        type="checkbox"
+        checked={aceitou}
+        onChange={(evento) => setAceitou(evento.target.checked)}
+      />
+      Aceito receber novidades
+      <p>{aceitou ? "Preferência ativada" : "Preferência desativada"}</p>
+    </label>
+  );
+}
+~~~
