@@ -1,87 +1,93 @@
-# Aula 6 — useEffect
+# Aula 6 — Renderização condicional
 
 ## Objetivos de aprendizagem
 
-Compreender para que serve useEffect, interpretar suas dependências e reconhecer a importância da limpeza de efeitos.
+Compreender como exibir interfaces diferentes de acordo com condições, utilizar operadores JavaScript em JSX e escolher uma estratégia clara para cada situação.
 
-## 1. O que é um efeito?
+## 1. O que é renderização condicional?
 
-Um componente React descreve a interface a partir de props e estado. Em alguns casos, além de renderizar a interface, ele precisa sincronizar-se com sistemas externos, como eventos do navegador, temporizadores, conexões, assinaturas, APIs e bibliotecas que não são controladas pelo React.
+Renderização condicional é a prática de mostrar, ocultar ou alterar partes da interface conforme uma condição. Por exemplo, uma aplicação pode apresentar uma mensagem de boas-vindas para uma pessoa autenticada, um aviso quando não há resultados ou um indicador enquanto os dados são carregados.
 
-## 2. O que é useEffect?
+Como JSX permite expressões JavaScript, podemos aproveitar operadores e condições para definir o que será exibido.
 
-useEffect é um Hook que permite sincronizar um componente com sistemas externos. O efeito é declarado por meio de uma função e pode retornar uma função de limpeza.
+## 2. Usando if e return
 
-~~~jsx
-import { useEffect } from "react";
-
-useEffect(() => {
-  document.title = "React Lab";
-}, []);
-~~~
-
-Este exemplo define o título da aba do navegador quando o componente é montado, considerando um ambiente de navegador.
-
-## 3. A lista de dependências
-
-A lista de dependências indica os valores reativos utilizados pelo efeito que devem ser acompanhados.
-
-- **Sem lista de dependências:** o efeito é executado após cada renderização confirmada.
-- **Lista vazia ([]):** o efeito não depende de valores reativos do componente e, em condições normais, executa na montagem. No desenvolvimento com Strict Mode, o React pode executar um ciclo adicional de configuração e limpeza para ajudar a identificar problemas.
-- **Lista com valores ([valor]):** o efeito volta a executar quando uma dependência muda, após a renderização correspondente.
-
-A lista deve refletir os valores reativos utilizados pelo efeito; não é apenas uma configuração escolhida arbitrariamente.
-
-## 4. Limpeza do efeito
-
-Alguns efeitos criam recursos que precisam ser liberados, como ouvintes de eventos ou temporizadores. A função retornada pelo efeito faz essa limpeza.
+Quando a condição define partes substancialmente diferentes da interface, uma instrução `if` antes do `return` pode deixar o componente mais legível.
 
 ~~~jsx
-useEffect(() => {
-  function aoRedimensionar() {
-    console.log(window.innerWidth);
+function MensagemAcesso({ autenticado }) {
+  if (autenticado) {
+    return <p>Bem-vindo de volta!</p>;
   }
 
-  window.addEventListener("resize", aoRedimensionar);
-
-  return () => {
-    window.removeEventListener("resize", aoRedimensionar);
-  };
-}, []);
+  return <p>Entre para continuar.</p>;
+}
 ~~~
 
-A limpeza ocorre antes de uma nova configuração do mesmo efeito quando suas dependências mudam e quando o componente deixa de ser utilizado.
+A função retorna uma interface diferente de acordo com o valor recebido por prop.
 
-## 5. Quando não usar useEffect
+## 3. Operador ternário
 
-useEffect não é necessário para todo tipo de lógica. Se um valor pode ser calculado diretamente a partir de props e estado durante a renderização, geralmente é melhor fazer esse cálculo diretamente.
+O operador ternário é útil quando queremos escolher entre duas expressões dentro do JSX.
 
-Também não é indicado usar efeitos apenas para responder a um clique quando a lógica pertence naturalmente ao manipulador do evento. Efeitos devem atender a uma necessidade real de sincronização externa.
+~~~jsx
+function Status({ disponivel }) {
+  return (
+    <p>
+      {disponivel ? "Disponível" : "Indisponível"}
+    </p>
+  );
+}
+~~~
 
-## 6. Efeitos e APIs
+Use-o para condições simples. Ternários aninhados podem dificultar a leitura e normalmente merecem ser substituídos por condições mais explícitas.
 
-Uma requisição de dados pode ser iniciada por um efeito, mas é necessário considerar carregamento, erro, cancelamento ou descarte de respostas obsoletas. Em aplicações maiores, bibliotecas específicas para busca e cache de dados podem oferecer soluções mais completas.
+## 4. Operador lógico &&
+
+O operador `&&` pode renderizar um elemento somente quando uma condição for verdadeira.
+
+~~~jsx
+function Aviso({ temErro }) {
+  return (
+    <section>
+      {temErro && <p>Não foi possível concluir a operação.</p>}
+    </section>
+  );
+}
+~~~
+
+Atenção: se a condição à esquerda for um número como `0`, o JavaScript pode renderizar esse zero. Quando a condição depende de um número, faça uma comparação explícita, como `quantidade > 0 && ...`.
+
+## 5. Combinação com listas e estado
+
+A renderização condicional aparece com frequência junto de listas e estado. Por exemplo, um catálogo pode mostrar uma mensagem quando o array está vazio ou exibir os resultados quando existem itens. A condição deve representar claramente o estado real dos dados.
+
+## 6. Boas práticas
+
+- Prefira condições simples e fáceis de entender.
+- Extraia trechos complexos para componentes menores quando isso melhorar a leitura.
+- Não confunda ocultar um elemento com proteger dados: regras de autorização precisam ser aplicadas também no servidor.
+- Trate explicitamente estados relevantes, como carregamento, erro e lista vazia.
+- Evite ternários profundamente aninhados.
 
 ## 7. Erros comuns
 
-- Omitir dependências reativas utilizadas pelo efeito.
-- Criar efeitos para cálculos que poderiam ocorrer durante a renderização.
-- Esquecer de remover eventos ou limpar temporizadores.
-- Supor que um efeito com lista vazia executará literalmente uma única vez em todo ambiente.
-- Utilizar useEffect como substituto universal para qualquer lógica de componente.
+- Usar `&&` com um número que pode ser zero e acabar exibindo `0`.
+- Misturar muitas condições em uma única expressão JSX.
+- Esquecer o caso alternativo de uma condição importante.
+- Acreditar que esconder um botão na interface substitui a validação de permissões no servidor.
 
 ## Resumo
 
-useEffect sincroniza um componente React com sistemas externos. Entender dependências e limpeza é fundamental para evitar efeitos repetidos desnecessariamente, assinaturas duplicadas e recursos que continuam ativos quando não deveriam.
+A renderização condicional permite adaptar a interface aos dados, ao estado e às permissões de apresentação. `if`, o operador ternário e `&&` resolvem a maioria dos casos introdutórios; escolha a forma que deixar o código mais claro.
 
 ## Para refletir
 
-1. O que caracteriza um efeito?
-2. Para que serve a lista de dependências?
-3. Por que alguns efeitos precisam de uma função de limpeza?
-4. Quando um cálculo não precisa de useEffect?
+1. Quando usar `if` em vez de um operador ternário?
+2. Qual cuidado é necessário ao usar `&&` com números?
+3. Por que esconder um elemento não substitui a autorização no servidor?
 
 ## Referências
 
-- [React — Sincronizando com efeitos](https://react.dev/learn/synchronizing-with-effects)
-- [React — useEffect](https://react.dev/reference/react/useEffect)
+- [React — Renderização condicional](https://react.dev/learn/conditional-rendering)
+- [MDN — Operador condicional (ternário)](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/Conditional_operator)
