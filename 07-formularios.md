@@ -1,93 +1,104 @@
-# Aula 7 — Formulários em React
+# Aula 7 — State e useState
 
 ## Objetivos de aprendizagem
 
-Entender como formulários recebem dados, compreender campos controlados e reconhecer os principais cuidados de acessibilidade e validação.
+Entender o conceito de estado, reconhecer quando uma informação deve ser armazenada nele e compreender como o Hook useState participa das atualizações da interface.
 
-## 1. O papel dos formulários
+## 1. O que é estado?
 
-Formulários permitem que usuários enviem informações para uma aplicação. Podem servir para cadastrar conceitos, filtrar conteúdos, autenticar pessoas ou registrar preferências.
+Estado é uma informação que um componente precisa lembrar entre renderizações. Exemplos comuns incluem um contador, a opção selecionada em um filtro, a abertura de um menu e os dados digitados em um formulário.
 
-Em React, os formulários combinam elementos HTML com eventos e, quando necessário, estado para acompanhar os dados inseridos.
+Quando o estado muda, o React pode renderizar novamente o componente para refletir o novo valor na interface.
 
-## 2. Campos controlados
+## 2. Por que uma variável comum não basta?
 
-Um campo controlado é aquele cujo valor é definido pelo estado React. O evento de alteração atualiza esse estado, mantendo o valor exibido sincronizado com os dados do componente.
+Uma variável local pode armazenar um valor durante a execução de uma função, mas alterá-la não solicita, por si só, uma nova renderização. Além disso, a função do componente pode ser executada novamente e recriar suas variáveis locais.
+
+O estado React permite preservar um valor entre renderizações e informar ao React quando uma atualização é necessária.
+
+## 3. O Hook useState
+
+useState permite adicionar estado a um componente funcional. Ele retorna o valor atual e uma função para solicitar sua atualização.
 
 ~~~jsx
 import { useState } from "react";
 
-function CampoNome() {
-  const [nome, setNome] = useState("");
+function Contador() {
+  const [contador, setContador] = useState(0);
 
   return (
-    <label>
-      Nome
-      <input
-        value={nome}
-        onChange={(evento) => setNome(evento.target.value)}
-      />
-    </label>
+    <section>
+      <p>Valor: {contador}</p>
+      <button onClick={() => setContador(contador + 1)}>
+        Incrementar
+      </button>
+    </section>
   );
 }
 ~~~
 
-Nesse exemplo, value define o valor exibido e onChange informa ao React sobre as alterações feitas pela pessoa.
+Nesse exemplo, contador representa o valor usado na renderização atual. setContador solicita a atualização para um novo valor.
 
-## 3. Envio do formulário
+## 4. O que acontece após uma atualização?
 
-O evento onSubmit permite tratar o envio. Quando a aplicação pretende processar os dados sem a navegação padrão do navegador, é comum chamar event.preventDefault() no manipulador.
+1. A pessoa interage com a interface.
+2. Uma função chama o atualizador do estado.
+3. O React agenda e processa a atualização.
+4. O componente é renderizado novamente com o estado atualizado.
+5. O React coordena as alterações necessárias na interface.
+
+A atualização não deve ser entendida como uma mudança imediata da variável local na mesma execução da função.
+
+## 5. Atualizações baseadas no valor anterior
+
+Quando o próximo valor depende do valor anterior, é comum usar a forma funcional do atualizador:
 
 ~~~jsx
-function aoEnviar(evento) {
-  evento.preventDefault();
-  // Processar os dados do formulário.
-}
+setContador((valorAnterior) => valorAnterior + 1);
 ~~~
 
-A lógica de envio pode validar os campos, apresentar mensagens e encaminhar os dados a um serviço.
+Essa forma é especialmente útil quando várias atualizações são solicitadas em sequência, porque cada cálculo recebe o valor anterior apropriado da fila de atualizações.
 
-## 4. Validação
+## 6. Estado com objetos e arrays
 
-A validação pode ocorrer em diferentes camadas:
+O estado pode armazenar strings, números, booleanos, objetos e arrays. Ao atualizar objetos e arrays, a abordagem usual é criar uma nova estrutura em vez de modificar diretamente a estrutura existente.
 
-- **HTML:** atributos como required, type="email" e minLength ajudam com validações básicas.
-- **Interface React:** permite apresentar mensagens específicas e orientar a pessoa.
-- **Servidor:** precisa validar os dados recebidos, pois as verificações no navegador podem ser contornadas.
+~~~jsx
+setPerfil((perfilAtual) => ({
+  ...perfilAtual,
+  curso: "Análise e Desenvolvimento de Sistemas"
+}));
+~~~
 
-A validação deve ser compreensível, indicar o problema e ajudar a corrigi-lo.
+A imutabilidade ajuda o React a identificar mudanças de referência e torna o fluxo de dados mais previsível.
 
-## 5. Acessibilidade
+## 7. Regras dos Hooks
 
-Formulários acessíveis ajudam as pessoas a compreender e preencher os campos. Boas práticas incluem associar um label a cada campo, usar tipos de entrada adequados, informar erros por texto, preservar foco e ordem lógica de navegação e identificar claramente o botão de envio.
+- Chame Hooks no nível superior de componentes funcionais ou de Hooks personalizados.
+- Não os chame dentro de condições, loops ou funções aninhadas.
+- Use estado para valores que precisam persistir e influenciar a interface.
+- Evite duplicar estado quando um valor pode ser calculado a partir de outros dados.
 
-## 6. Campos controlados e não controlados
+## 8. Erros comuns
 
-Em campos controlados, o estado React define o valor do campo. Em campos não controlados, o próprio elemento do DOM mantém o valor e ele pode ser lido quando necessário, por exemplo por meio de uma referência ou da API FormData.
-
-As duas abordagens são válidas em contextos diferentes. A escolha depende da complexidade, da validação e de como os dados serão utilizados.
-
-## 7. Erros comuns
-
-- Definir value sem implementar a atualização correspondente.
-- Esquecer de tratar o envio e permitir uma navegação inesperada.
-- Não associar rótulos aos campos.
-- Validar apenas no cliente quando o dado será processado por um servidor.
-- Exibir mensagens genéricas que não ajudam a pessoa a corrigir o problema.
+- Modificar diretamente objetos ou arrays guardados no estado.
+- Esperar que mudar uma variável comum atualize a interface.
+- Chamar Hooks condicionalmente.
+- Armazenar em estado um valor que pode ser calculado durante a renderização sem necessidade.
+- Ignorar que atualizações podem ser agrupadas pelo React.
 
 ## Resumo
 
-Formulários em React combinam elementos HTML, eventos e, frequentemente, estado. Campos controlados são úteis quando a aplicação precisa acompanhar os valores durante a digitação; validação e acessibilidade devem fazer parte do planejamento desde o início.
+O estado permite que os componentes mantenham informações ao longo do tempo. useState fornece o valor atual e uma função de atualização, permitindo que a interface responda às interações do usuário.
 
 ## Para refletir
 
-1. O que caracteriza um campo controlado?
-2. Qual é a função de onSubmit?
-3. Por que a validação do navegador não substitui a validação no servidor?
-4. Como tornar um formulário mais acessível?
+1. Qual é a diferença entre estado e uma variável local?
+2. Por que devemos evitar mutar objetos guardados no estado?
+3. Quando é útil usar a forma funcional de atualização?
 
 ## Referências
 
-- [React — Respondendo a eventos](https://react.dev/learn/responding-to-events)
-- [React — Reagindo à entrada com estado](https://react.dev/learn/reacting-to-input-with-state)
-- [MDN — Elemento form](https://developer.mozilla.org/docs/Web/HTML/Element/form)
+- [React — Adicionando interatividade](https://react.dev/learn/adding-interactivity)
+- [React — useState](https://react.dev/reference/react/useState)
+- [React — Atualizando objetos no estado](https://react.dev/learn/updating-objects-in-state)
