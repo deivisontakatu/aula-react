@@ -1,59 +1,47 @@
-# Aula React — React Lab
+# Aula React
 
-Material didático para um curso prático de React com carga horária de 20 horas. O repositório é focado em documentação Markdown: cada arquivo explica um conceito, apresenta uma demonstração guiada pelo professor e propõe uma atividade de reprodução e um desafio para os alunos.
+Material didático teórico para um curso introdutório de React com carga horária sugerida de 20 horas.
 
-## Objetivos
-
-- Compreender os principais conceitos da biblioteca React.
-- Acompanhar demonstrações curtas e reproduzir exemplos passo a passo.
-- Consolidar cada assunto com pequenos desafios.
-- Avançar de fundamentos a Hooks, formulários e integração com APIs.
-
-## Como estudar cada aula
-
-1. Leia os objetivos e a explicação do conceito.
-2. Acompanhe a demonstração do professor.
-3. Reproduza o exemplo durante a aula.
-4. Resolva o desafio proposto sem copiar a solução integralmente.
-5. Marque o checklist de aprendizagem ao terminar.
+O repositório está organizado em dez aulas. Cada pasta contém um arquivo Markdown dedicado a explicar um conceito da biblioteca, com linguagem didática, exemplos e pontos de atenção.
 
 ## Trilha de aprendizagem
 
-Consulte [`docs/INDEX.md`](docs/INDEX.md) para ver a sequência sugerida das aulas e os links para cada conceito.
+1. [JSX](01-jsx/jsx.md)
+2. [Componentes](02-componentes/componentes.md)
+3. [Props](03-props/props.md)
+4. [Virtual DOM](04-virtual-dom/virtual-dom.md)
+5. [State e useState](05-state-usestate/state-usestate.md)
+6. [useEffect](06-useeffect/useeffect.md)
+7. [Formulários](07-formularios/formularios.md)
+8. [Listas e key](08-listas-e-key/listas-e-key.md)
+9. [React Router](09-react-router/react-router.md)
+10. [Consumo de APIs](10-consumo-de-apis/consumo-de-apis.md)
 
 ## Estrutura
 
-```text
+~~~text
 aula-react/
 ├── README.md
-└── docs/
-    ├── INDEX.md
-    ├── 00-introducao/
-    ├── 01-fundamentos/
-    ├── 02-interatividade/
-    ├── 03-renderizacao/
-    ├── 04-hooks/
-    ├── 05-integracao/
-    └── 06-projeto-final/
-```
+├── 01-jsx/jsx.md
+├── 02-componentes/componentes.md
+├── 03-props/props.md
+├── 04-virtual-dom/virtual-dom.md
+├── 05-state-usestate/state-usestate.md
+├── 06-useeffect/useeffect.md
+├── 07-formularios/formularios.md
+├── 08-listas-e-key/listas-e-key.md
+├── 09-react-router/react-router.md
+└── 10-consumo-de-apis/consumo-de-apis.md
+~~~
 
-## Formato das aulas
+## Abordagem
 
-Cada documento procura seguir um padrão: objetivos, problema, teoria, demonstração, reprodução do aluno, desafio prático, erros comuns, checklist e próximo passo.
+- **Teoria primeiro:** definição, motivação, funcionamento e exemplos.
+- **Exemplos contextualizados:** trechos curtos de código para apoiar a compreensão.
+- **Progressão:** a trilha parte da descrição da interface e chega à integração com serviços externos.
+- **Escopo:** somente documentação Markdown; não há aplicação React executável.
 
-## Público-alvo
-
-Estudantes com conhecimentos básicos de HTML, CSS e JavaScript. O conteúdo é introdutório e foi pensado para demonstração guiada e prática em sala.
-
-## Escopo atual
-
-Este repositório contém documentação Markdown. Não inclui uma aplicação React executável.
-
-## Referências
+## Referências principais
 
 - [Documentação oficial do React](https://react.dev/learn)
-- [Vite — guia oficial](https://vite.dev/guide/)
-
-## Licença
-
-A definir conforme a forma de distribuição do material didático.
+- [Documentação do React Router](https://reactrouter.com/)
