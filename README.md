@@ -67,3 +67,28 @@ aula-react/
 - [Renderização condicional](https://react.dev/learn/conditional-rendering)
 - [Renderizando listas](https://react.dev/learn/rendering-lists)
 - [Documentação do React Router](https://reactrouter.com/)
+
+## Exemplos rápidos de código
+
+Os trechos abaixo são exemplos introdutórios de React. Os demais arquivos aprofundam cada conceito com exemplos específicos.
+
+**Exemplo 1 — JSX**
+~~~jsx
+const titulo = <h1>React Lab</h1>;
+~~~
+
+**Exemplo 2 — Componente**
+~~~jsx
+function BoasVindas() {
+  return <p>Vamos aprender React!</p>;
+}
+~~~
+
+**Exemplo 3 — Props**
+~~~jsx
+function Saudacao({ nome }) {
+  return <p>Olá, {nome}!</p>;
+}
+
+// Uso: <Saudacao nome="Ana" />
+~~~
