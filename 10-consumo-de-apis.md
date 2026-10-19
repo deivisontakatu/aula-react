@@ -93,3 +93,80 @@ O consumo de APIs permite que uma interface React trabalhe com dados externos. P
 - [MDN — Fetch API](https://developer.mozilla.org/docs/Web/API/Fetch_API)
 - [MDN — Usando Fetch](https://developer.mozilla.org/docs/Web/API/Fetch_API/Using_Fetch)
 - [React — Sincronizando com efeitos](https://react.dev/learn/synchronizing-with-effects)
+
+## Exemplos adicionais de código
+
+Os exemplos usam o endpoint público `https://jsonplaceholder.typicode.com` para fins didáticos. Verifique a disponibilidade do serviço antes da aula.
+
+### Exemplo 1 — Buscar dados com fetch
+~~~jsx
+async function buscarPublicacoes() {
+  const resposta = await fetch("https://jsonplaceholder.typicode.com/posts");
+
+  if (!resposta.ok) {
+    throw new Error("Falha ao buscar publicações.");
+  }
+
+  return resposta.json();
+}
+~~~
+
+### Exemplo 2 — Carregamento, erro e sucesso
+~~~jsx
+import { useEffect, useState } from "react";
+
+function ListaPublicacoes() {
+  const [publicacoes, setPublicacoes] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
+
+  useEffect(() => {
+    async function carregar() {
+      try {
+        const resposta = await fetch("https://jsonplaceholder.typicode.com/posts");
+        if (!resposta.ok) throw new Error("Não foi possível carregar.");
+        setPublicacoes(await resposta.json());
+      } catch (erroRecebido) {
+        setErro(erroRecebido.message);
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    carregar();
+  }, []);
+
+  if (carregando) return <p>Carregando...</p>;
+  if (erro) return <p role="alert">{erro}</p>;
+
+  return (
+    <ul>
+      {publicacoes.slice(0, 5).map((item) => (
+        <li key={item.id}>{item.title}</li>
+      ))}
+    </ul>
+  );
+}
+~~~
+
+### Exemplo 3 — Enviar dados com POST
+~~~jsx
+async function criarPublicacao() {
+  const resposta = await fetch("https://jsonplaceholder.typicode.com/posts", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      title: "Aprendendo React",
+      body: "Exemplo didático de envio de dados",
+      userId: 1
+    })
+  });
+
+  if (!resposta.ok) {
+    throw new Error("Não foi possível criar a publicação.");
+  }
+
+  const novaPublicacao = await resposta.json();
+  return novaPublicacao;
+}
+~~~
