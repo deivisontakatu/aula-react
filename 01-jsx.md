@@ -97,3 +97,38 @@ JSX é uma sintaxe que torna mais expressiva a descrição das interfaces React.
 
 - [React — Escrevendo marcação com JSX](https://react.dev/learn/writing-markup-with-jsx)
 - [React — JavaScript em JSX com chaves](https://react.dev/learn/javascript-in-jsx-with-curly-braces)
+
+## Exemplos adicionais de código
+
+### Exemplo 1 — Atributos JSX
+~~~jsx
+function LinkDocumentacao() {
+  return (
+    <a href="https://react.dev" className="link">
+      Documentação do React
+    </a>
+  );
+}
+~~~
+
+### Exemplo 2 — Expressões e cálculos
+~~~jsx
+function ResumoPedido() {
+  const quantidade = 3;
+  const preco = 12;
+
+  return <p>Total: R$ {quantidade * preco}</p>;
+}
+~~~
+
+### Exemplo 3 — Fragment
+~~~jsx
+function Perfil() {
+  return (
+    <>
+      <h2>Camila Souza</h2>
+      <p>Estudante de desenvolvimento web</p>
+    </>
+  );
+}
+~~~
