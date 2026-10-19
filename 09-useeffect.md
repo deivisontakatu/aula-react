@@ -85,3 +85,54 @@ useEffect sincroniza um componente React com sistemas externos. Entender depend�
 
 - [React — Sincronizando com efeitos](https://react.dev/learn/synchronizing-with-effects)
 - [React — useEffect](https://react.dev/reference/react/useEffect)
+
+## Exemplos adicionais de código
+
+### Exemplo 1 — Atualizar o título da página
+~~~jsx
+import { useEffect } from "react";
+
+function TituloPagina({ titulo }) {
+  useEffect(() => {
+    document.title = titulo;
+  }, [titulo]);
+
+  return <h1>{titulo}</h1>;
+}
+~~~
+
+### Exemplo 2 — Temporizador com limpeza
+~~~jsx
+import { useEffect, useState } from "react";
+
+function RelogioSimples() {
+  const [agora, setAgora] = useState(new Date());
+
+  useEffect(() => {
+    const id = setInterval(() => setAgora(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return <p>Horário: {agora.toLocaleTimeString()}</p>;
+}
+~~~
+
+### Exemplo 3 — Sincronizar com um evento do navegador
+~~~jsx
+import { useEffect, useState } from "react";
+
+function LarguraJanela() {
+  const [largura, setLargura] = useState(window.innerWidth);
+
+  useEffect(() => {
+    function atualizarLargura() {
+      setLargura(window.innerWidth);
+    }
+
+    window.addEventListener("resize", atualizarLargura);
+    return () => window.removeEventListener("resize", atualizarLargura);
+  }, []);
+
+  return <p>Largura da janela: {largura}px</p>;
+}
+~~~
