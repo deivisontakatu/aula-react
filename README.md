@@ -1,10 +1,21 @@
-# Aula React
+# React
 
-Material didático teórico para um curso introdutório de React com carga horária sugerida de 20 horas.
+React é uma biblioteca JavaScript utilizada para construir interfaces de usuário. Ela permite dividir a interface em componentes reutilizáveis, organizar a aplicação em partes menores e atualizar a tela conforme os dados mudam.
 
-Cada arquivo Markdown corresponde a uma aula sobre um conceito da biblioteca, com explicações, exemplos e pontos de atenção. A proposta é permitir que o professor apresente o conceito, demonstre os exemplos e, em seguida, oriente a reprodução pelos estudantes.
+Este repositório reúne materiais de estudo, explicações e exemplos de código sobre os principais conceitos do React. O conteúdo pode ser utilizado como referência para aprender a biblioteca, revisar conceitos ou desenvolver atividades práticas.
 
-## Trilha de aprendizagem
+## Principais conceitos
+
+- **JSX:** sintaxe que permite descrever elementos de interface dentro do JavaScript.
+- **Componentes:** blocos reutilizáveis que representam partes da interface.
+- **Props:** dados passados de um componente para outro.
+- **State:** dados que podem mudar durante o uso da aplicação e provocar uma nova renderização.
+- **Renderização de listas e condicional:** formas de apresentar conteúdo de acordo com os dados disponíveis.
+- **Hooks:** funções como `useState` e `useEffect`, usadas para trabalhar com estado e efeitos em componentes funcionais.
+- **Consumo de APIs:** integração da interface com serviços externos.
+- **Navegação:** organização de páginas e rotas com bibliotecas como React Router.
+
+## Conteúdo do repositório
 
 1. [JSX](01-jsx.md)
 2. [Componentes](02-componentes.md)
@@ -18,9 +29,62 @@ Cada arquivo Markdown corresponde a uma aula sobre um conceito da biblioteca, co
 10. [Consumo de APIs](10-consumo-de-apis.md)
 11. [React Router](11-react-router.md)
 
-## Estrutura
+## Exemplos de código
 
-~~~text
+### 1. Criando um elemento com JSX
+
+JSX permite descrever a estrutura da interface usando uma sintaxe semelhante a HTML dentro do JavaScript.
+
+```jsx
+const titulo = <h1>Olá, React!</h1>;
+```
+
+### 2. Criando um componente
+
+Componentes são funções que retornam elementos da interface e podem ser reutilizados em diferentes partes da aplicação.
+
+```jsx
+function BoasVindas() {
+  return <p>Bem-vindo ao mundo do React!</p>;
+}
+
+export default BoasVindas;
+```
+
+### 3. Utilizando props
+
+As props permitem que um componente receba dados de quem o utiliza.
+
+```jsx
+function Saudacao({ nome }) {
+  return <p>Olá, {nome}!</p>;
+}
+
+// Exemplo de uso:
+// <Saudacao nome="Ana" />
+```
+
+### 4. Gerenciando estado
+
+O hook `useState` permite armazenar e atualizar informações que afetam a interface.
+
+```jsx
+import { useState } from "react";
+
+function Contador() {
+  const [contador, setContador] = useState(0);
+
+  return (
+    <button onClick={() => setContador(contador + 1)}>
+      Cliques: {contador}
+    </button>
+  );
+}
+```
+
+## Estrutura dos arquivos
+
+```text
 aula-react/
 ├── README.md
 ├── 01-jsx.md
@@ -34,61 +98,14 @@ aula-react/
 ├── 09-useeffect.md
 ├── 10-consumo-de-apis.md
 └── 11-react-router.md
-~~~
+```
 
-## Abordagem
+## Documentação e referências
 
-- **Teoria primeiro:** definição, motivação, funcionamento e exemplos.
-- **Demonstração e reprodução:** o professor demonstra os conceitos e os estudantes reproduzem e adaptam os exemplos.
-- **Progressão:** a trilha parte da descrição da interface, passa por composição e interação e termina com integração externa e navegação.
-- **Boas práticas:** atenção a imutabilidade, eventos, acessibilidade, estados de carregamento e erros.
-- **Escopo:** somente documentação Markdown; não há aplicação React executável.
-
-## Distribuição sugerida das 20 horas
-
-| Conteúdo | Carga horária |
-|---|---:|
-| JSX | 1,5 h |
-| Componentes | 2 h |
-| Props | 1,5 h |
-| Virtual DOM | 1 h |
-| Listas e key | 1 h |
-| Renderização condicional | 1 h |
-| State, useState e eventos | 3 h |
-| Formulários | 2 h |
-| useEffect | 2 h |
-| Consumo de APIs | 2,5 h |
-| React Router | 1,5 h |
-| **Total** | **20 h** |
-
-## Referências principais
-
-- [Documentação oficial do React](https://react.dev/learn)
-- [Renderização condicional](https://react.dev/learn/conditional-rendering)
-- [Renderizando listas](https://react.dev/learn/rendering-lists)
+- [Documentação oficial do React](https://react.dev/)
+- [Aprenda os fundamentos do React](https://react.dev/learn)
 - [Documentação do React Router](https://reactrouter.com/)
 
-## Exemplos rápidos de código
+## Observação
 
-Os trechos abaixo são exemplos introdutórios de React. Os demais arquivos aprofundam cada conceito com exemplos específicos.
-
-**Exemplo 1 — JSX**
-~~~jsx
-const titulo = <h1>React Lab</h1>;
-~~~
-
-**Exemplo 2 — Componente**
-~~~jsx
-function BoasVindas() {
-  return <p>Vamos aprender React!</p>;
-}
-~~~
-
-**Exemplo 3 — Props**
-~~~jsx
-function Saudacao({ nome }) {
-  return <p>Olá, {nome}!</p>;
-}
-
-// Uso: <Saudacao nome="Ana" />
-~~~
+Os arquivos deste repositório são materiais de referência em Markdown. Os exemplos servem para estudo e podem precisar ser inseridos em um projeto React configurado para serem executados.
