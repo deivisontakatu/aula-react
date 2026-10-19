@@ -1,84 +1,87 @@
-# Aula 9 — React Router
+# Aula 9 — useEffect
 
 ## Objetivos de aprendizagem
 
-Compreender a função do roteamento em aplicações React, diferenciar caminhos de URL de componentes e reconhecer os principais elementos de uma navegação por rotas.
+Compreender para que serve useEffect, interpretar suas dependências e reconhecer a importância da limpeza de efeitos.
 
-## 1. Por que precisamos de roteamento?
+## 1. O que é um efeito?
 
-Uma aplicação pode ter várias telas: página inicial, catálogo, detalhes de um conceito, formulário e página de informações. O roteamento associa caminhos da URL às partes da interface que devem ser exibidas.
+Um componente React descreve a interface a partir de props e estado. Em alguns casos, além de renderizar a interface, ele precisa sincronizar-se com sistemas externos, como eventos do navegador, temporizadores, conexões, assinaturas, APIs e bibliotecas que não são controladas pelo React.
 
-Sem uma estratégia de navegação, a lógica para alternar entre telas pode ficar espalhada por vários componentes.
+## 2. O que é useEffect?
 
-## 2. O que é React Router?
+useEffect é um Hook que permite sincronizar um componente com sistemas externos. O efeito é declarado por meio de uma função e pode retornar uma função de limpeza.
 
-React Router é uma biblioteca de roteamento bastante utilizada no ecossistema React. Ela oferece recursos para associar URLs a componentes e navegar entre páginas.
+~~~jsx
+import { useEffect } from "react";
 
-A configuração exata depende da versão e do modo de utilização da biblioteca. Por isso, exemplos devem ser conferidos com a documentação da versão adotada no curso.
+useEffect(() => {
+  document.title = "React Lab";
+}, []);
+~~~
 
-## 3. Conceitos fundamentais
+Este exemplo define o título da aba do navegador quando o componente é montado, considerando um ambiente de navegador.
 
-- **Rota:** regra que associa um caminho a uma interface.
-- **URL:** endereço que identifica a localização atual.
-- **Link:** elemento de navegação entre rotas.
-- **Parâmetro de rota:** parte variável do caminho, como o identificador de um conceito.
-- **Rota aninhada:** rota organizada dentro de uma estrutura de rotas pai.
-- **Página não encontrada:** estado apresentado quando nenhum caminho conhecido corresponde à URL.
+## 3. A lista de dependências
 
-## 4. Exemplo conceitual
+A lista de dependências indica os valores reativos utilizados pelo efeito que devem ser acompanhados.
 
-Imagine um catálogo chamado React Lab. Ele pode ter os caminhos:
+- **Sem lista de dependências:** o efeito é executado após cada renderização confirmada.
+- **Lista vazia ([]):** o efeito não depende de valores reativos do componente e, em condições normais, executa na montagem. No desenvolvimento com Strict Mode, o React pode executar um ciclo adicional de configuração e limpeza para ajudar a identificar problemas.
+- **Lista com valores ([valor]):** o efeito volta a executar quando uma dependência muda, após a renderização correspondente.
 
-| Caminho | Conteúdo |
-|---|---|
-| / | Página inicial |
-| /conceitos | Lista de conceitos |
-| /conceitos/jsx | Detalhes sobre JSX |
-| /sobre | Informações sobre o projeto |
+A lista deve refletir os valores reativos utilizados pelo efeito; não é apenas uma configuração escolhida arbitrariamente.
 
-A rota de detalhes pode usar um parâmetro, por exemplo /conceitos/:id, para representar diferentes conceitos com a mesma estrutura de página.
+## 4. Limpeza do efeito
 
-## 5. Navegação sem recarga completa
+Alguns efeitos criam recursos que precisam ser liberados, como ouvintes de eventos ou temporizadores. A função retornada pelo efeito faz essa limpeza.
 
-Links de roteamento permitem mudar a rota da aplicação sem depender de uma navegação tradicional que recarregue todo o documento a cada clique. O roteador atualiza a interface conforme a URL e a configuração de rotas.
+~~~jsx
+useEffect(() => {
+  function aoRedimensionar() {
+    console.log(window.innerWidth);
+  }
 
-Isso não elimina a necessidade de pensar no carregamento inicial, no acesso direto a uma URL e na configuração do servidor para aplicações de página única.
+  window.addEventListener("resize", aoRedimensionar);
 
-## 6. URL e estado da aplicação
+  return () => {
+    window.removeEventListener("resize", aoRedimensionar);
+  };
+}, []);
+~~~
 
-Informações importantes para navegação, como a página atual, filtros compartilháveis ou identificadores de recursos, podem ser representadas na URL. Isso facilita compartilhar links e usar os controles voltar e avançar do navegador.
+A limpeza ocorre antes de uma nova configuração do mesmo efeito quando suas dependências mudam e quando o componente deixa de ser utilizado.
 
-Nem todo estado precisa estar na URL. A decisão depende de a informação precisar ser compartilhada, marcada como favorita ou preservada ao recarregar a página.
+## 5. Quando não usar useEffect
 
-## 7. Boas práticas
+useEffect não é necessário para todo tipo de lógica. Se um valor pode ser calculado diretamente a partir de props e estado durante a renderização, geralmente é melhor fazer esse cálculo diretamente.
 
-- Escolha caminhos claros e consistentes.
-- Use links semânticos para navegação.
-- Planeje o comportamento de rotas inexistentes.
-- Pense no acesso direto a páginas internas.
-- Consulte a documentação da versão instalada.
-- Considere acessibilidade, foco e títulos ao mudar de página.
+Também não é indicado usar efeitos apenas para responder a um clique quando a lógica pertence naturalmente ao manipulador do evento. Efeitos devem atender a uma necessidade real de sincronização externa.
 
-## 8. Erros comuns
+## 6. Efeitos e APIs
 
-- Confundir o nome de um componente com o caminho da rota.
-- Configurar rotas sem pensar no acesso direto pela URL.
-- Usar elementos de navegação inadequados.
-- Copiar exemplos de versões diferentes da biblioteca.
-- Colocar toda a lógica de navegação dentro de um único componente sem organização.
+Uma requisição de dados pode ser iniciada por um efeito, mas é necessário considerar carregamento, erro, cancelamento ou descarte de respostas obsoletas. Em aplicações maiores, bibliotecas específicas para busca e cache de dados podem oferecer soluções mais completas.
+
+## 7. Erros comuns
+
+- Omitir dependências reativas utilizadas pelo efeito.
+- Criar efeitos para cálculos que poderiam ocorrer durante a renderização.
+- Esquecer de remover eventos ou limpar temporizadores.
+- Supor que um efeito com lista vazia executará literalmente uma única vez em todo ambiente.
+- Utilizar useEffect como substituto universal para qualquer lógica de componente.
 
 ## Resumo
 
-React Router ajuda a organizar a navegação entre telas e a associar URLs a componentes. Um bom roteamento torna a aplicação mais previsível, facilita o compartilhamento de links e melhora a experiência de navegação.
+useEffect sincroniza um componente React com sistemas externos. Entender dependências e limpeza é fundamental para evitar efeitos repetidos desnecessariamente, assinaturas duplicadas e recursos que continuam ativos quando não deveriam.
 
 ## Para refletir
 
-1. Qual problema uma biblioteca de roteamento resolve?
-2. Qual é a diferença entre rota e link?
-3. Quando faz sentido colocar um identificador na URL?
-4. Por que é importante testar o acesso direto a uma rota?
+1. O que caracteriza um efeito?
+2. Para que serve a lista de dependências?
+3. Por que alguns efeitos precisam de uma função de limpeza?
+4. Quando um cálculo não precisa de useEffect?
 
 ## Referências
 
-- [Documentação oficial do React Router](https://reactrouter.com/)
-- [React Router — Tutorial](https://reactrouter.com/start/declarative/installation)
+- [React — Sincronizando com efeitos](https://react.dev/learn/synchronizing-with-effects)
+- [React — useEffect](https://react.dev/reference/react/useEffect)
