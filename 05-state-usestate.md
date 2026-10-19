@@ -1,104 +1,89 @@
-# Aula 5 — State e useState
+# Aula 5 — Listas e key
 
 ## Objetivos de aprendizagem
 
-Entender o conceito de estado, reconhecer quando uma informação deve ser armazenada nele e compreender como o Hook useState participa das atualizações da interface.
+Compreender como listas de dados são transformadas em elementos React e explicar a finalidade das chaves (key) durante a reconciliação.
 
-## 1. O que é estado?
+## 1. Por que renderizar listas?
 
-Estado é uma informação que um componente precisa lembrar entre renderizações. Exemplos comuns incluem um contador, a opção selecionada em um filtro, a abertura de um menu e os dados digitados em um formulário.
+Catálogos, listas de tarefas, produtos e resultados de pesquisa são normalmente armazenados como coleções de dados. O React permite transformar essas coleções em elementos de interface de maneira declarativa.
 
-Quando o estado muda, o React pode renderizar novamente o componente para refletir o novo valor na interface.
-
-## 2. Por que uma variável comum não basta?
-
-Uma variável local pode armazenar um valor durante a execução de uma função, mas alterá-la não solicita, por si só, uma nova renderização. Além disso, a função do componente pode ser executada novamente e recriar suas variáveis locais.
-
-O estado React permite preservar um valor entre renderizações e informar ao React quando uma atualização é necessária.
-
-## 3. O Hook useState
-
-useState permite adicionar estado a um componente funcional. Ele retorna o valor atual e uma função para solicitar sua atualização.
+O método JavaScript map() percorre um array e produz um novo array com o resultado de uma função aplicada a cada item.
 
 ~~~jsx
-import { useState } from "react";
+const conceitos = ["JSX", "Props", "State"];
 
-function Contador() {
-  const [contador, setContador] = useState(0);
-
-  return (
-    <section>
-      <p>Valor: {contador}</p>
-      <button onClick={() => setContador(contador + 1)}>
-        Incrementar
-      </button>
-    </section>
-  );
-}
+const itens = conceitos.map((conceito) => (
+  <li>{conceito}</li>
+));
 ~~~
 
-Nesse exemplo, contador representa o valor usado na renderização atual. setContador solicita a atualização para um novo valor.
+O exemplo demonstra a transformação de dados em elementos, mas ainda precisa de chaves estáveis para cada item.
 
-## 4. O que acontece após uma atualização?
+## 2. O que é key?
 
-1. A pessoa interage com a interface.
-2. Uma função chama o atualizador do estado.
-3. O React agenda e processa a atualização.
-4. O componente é renderizado novamente com o estado atualizado.
-5. O React coordena as alterações necessárias na interface.
-
-A atualização não deve ser entendida como uma mudança imediata da variável local na mesma execução da função.
-
-## 5. Atualizações baseadas no valor anterior
-
-Quando o próximo valor depende do valor anterior, é comum usar a forma funcional do atualizador:
+key é uma prop especial utilizada pelo React para identificar elementos entre irmãos em uma lista. Ela ajuda o React a reconhecer quais itens foram mantidos, adicionados, removidos ou reordenados.
 
 ~~~jsx
-setContador((valorAnterior) => valorAnterior + 1);
+const conceitos = [
+  { id: "jsx", titulo: "JSX" },
+  { id: "props", titulo: "Props" },
+  { id: "state", titulo: "State" },
+];
+
+const itens = conceitos.map((conceito) => (
+  <li key={conceito.id}>{conceito.titulo}</li>
+));
 ~~~
 
-Essa forma é especialmente útil quando várias atualizações são solicitadas em sequência, porque cada cálculo recebe o valor anterior apropriado da fila de atualizações.
+Nesse caso, cada item possui um identificador que funciona como chave.
 
-## 6. Estado com objetos e arrays
+## 3. O que caracteriza uma boa chave?
 
-O estado pode armazenar strings, números, booleanos, objetos e arrays. Ao atualizar objetos e arrays, a abordagem usual é criar uma nova estrutura em vez de modificar diretamente a estrutura existente.
+Uma boa chave deve ser única entre os elementos irmãos da lista, estável entre renderizações e associada ao item correto ao longo do tempo. Quando os dados possuem um identificador, normalmente ele é a melhor opção. A chave não precisa ser única em toda a aplicação, apenas entre os irmãos relevantes.
+
+## 4. Por que evitar índices como chave?
+
+Usar o índice do array como chave pode funcionar em listas estáticas. Entretanto, em listas que permitem inserção, remoção ou reordenação, os índices podem passar a representar itens diferentes.
+
+Isso pode levar o React a associar estado ou identidade ao item errado. Por esse motivo, prefira identificadores estáveis vindos dos dados.
+
+Também evite gerar chaves aleatórias a cada renderização: isso faz os itens parecerem novos a cada atualização.
+
+## 5. key não é uma prop comum
+
+A chave é utilizada internamente pelo React e não é disponibilizada automaticamente como uma prop comum ao componente filho. Se o componente também precisa do identificador, passe-o separadamente.
 
 ~~~jsx
-setPerfil((perfilAtual) => ({
-  ...perfilAtual,
-  curso: "Análise e Desenvolvimento de Sistemas"
-}));
+<CardConceito key={conceito.id} id={conceito.id} titulo={conceito.titulo} />
 ~~~
 
-A imutabilidade ajuda o React a identificar mudanças de referência e torna o fluxo de dados mais previsível.
+Aqui, key ajuda o React e id é um dado disponível para o componente.
 
-## 7. Regras dos Hooks
+## 6. Listas e estado
 
-- Chame Hooks no nível superior de componentes funcionais ou de Hooks personalizados.
-- Não os chame dentro de condições, loops ou funções aninhadas.
-- Use estado para valores que precisam persistir e influenciar a interface.
-- Evite duplicar estado quando um valor pode ser calculado a partir de outros dados.
+Quando uma lista pode mudar, é importante que a estrutura de dados e as chaves continuem coerentes. Para inserir ou remover itens de um array mantido em estado, a abordagem comum é produzir um novo array, em vez de modificar diretamente o array existente.
 
-## 8. Erros comuns
+## 7. Erros comuns
 
-- Modificar diretamente objetos ou arrays guardados no estado.
-- Esperar que mudar uma variável comum atualize a interface.
-- Chamar Hooks condicionalmente.
-- Armazenar em estado um valor que pode ser calculado durante a renderização sem necessidade.
-- Ignorar que atualizações podem ser agrupadas pelo React.
+- Esquecer a key.
+- Utilizar identificadores duplicados entre irmãos.
+- Usar índices em listas que mudam de ordem.
+- Gerar chaves aleatórias a cada renderização.
+- Esperar acessar key como uma prop comum no componente filho.
 
 ## Resumo
 
-O estado permite que os componentes mantenham informações ao longo do tempo. useState fornece o valor atual e uma função de atualização, permitindo que a interface responda às interações do usuário.
+map() permite converter dados em elementos React. key oferece uma identidade estável para cada item e ajuda o React a reconciliar corretamente listas que mudam.
 
 ## Para refletir
 
-1. Qual é a diferença entre estado e uma variável local?
-2. Por que devemos evitar mutar objetos guardados no estado?
-3. Quando é útil usar a forma funcional de atualização?
+1. Qual é a finalidade da key?
+2. Por que um índice pode ser uma chave inadequada?
+3. Por que key não substitui uma prop id?
+4. Como chaves estáveis ajudam quando itens são reordenados?
 
 ## Referências
 
-- [React — Adicionando interatividade](https://react.dev/learn/adding-interactivity)
-- [React — useState](https://react.dev/reference/react/useState)
-- [React — Atualizando objetos no estado](https://react.dev/learn/updating-objects-in-state)
+- [React — Renderizando listas](https://react.dev/learn/rendering-lists)
+- [React — Preservando e redefinindo o estado](https://react.dev/learn/preserving-and-resetting-state)
