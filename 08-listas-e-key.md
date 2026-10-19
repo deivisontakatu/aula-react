@@ -1,89 +1,93 @@
-# Aula 8 — Listas e key
+# Aula 8 — Formulários em React
 
 ## Objetivos de aprendizagem
 
-Compreender como listas de dados são transformadas em elementos React e explicar a finalidade das chaves (key) durante a reconciliação.
+Entender como formulários recebem dados, compreender campos controlados e reconhecer os principais cuidados de acessibilidade e validação.
 
-## 1. Por que renderizar listas?
+## 1. O papel dos formulários
 
-Catálogos, listas de tarefas, produtos e resultados de pesquisa são normalmente armazenados como coleções de dados. O React permite transformar essas coleções em elementos de interface de maneira declarativa.
+Formulários permitem que usuários enviem informações para uma aplicação. Podem servir para cadastrar conceitos, filtrar conteúdos, autenticar pessoas ou registrar preferências.
 
-O método JavaScript map() percorre um array e produz um novo array com o resultado de uma função aplicada a cada item.
+Em React, os formulários combinam elementos HTML com eventos e, quando necessário, estado para acompanhar os dados inseridos.
 
-~~~jsx
-const conceitos = ["JSX", "Props", "State"];
+## 2. Campos controlados
 
-const itens = conceitos.map((conceito) => (
-  <li>{conceito}</li>
-));
-~~~
-
-O exemplo demonstra a transformação de dados em elementos, mas ainda precisa de chaves estáveis para cada item.
-
-## 2. O que é key?
-
-key é uma prop especial utilizada pelo React para identificar elementos entre irmãos em uma lista. Ela ajuda o React a reconhecer quais itens foram mantidos, adicionados, removidos ou reordenados.
+Um campo controlado é aquele cujo valor é definido pelo estado React. O evento de alteração atualiza esse estado, mantendo o valor exibido sincronizado com os dados do componente.
 
 ~~~jsx
-const conceitos = [
-  { id: "jsx", titulo: "JSX" },
-  { id: "props", titulo: "Props" },
-  { id: "state", titulo: "State" },
-];
+import { useState } from "react";
 
-const itens = conceitos.map((conceito) => (
-  <li key={conceito.id}>{conceito.titulo}</li>
-));
+function CampoNome() {
+  const [nome, setNome] = useState("");
+
+  return (
+    <label>
+      Nome
+      <input
+        value={nome}
+        onChange={(evento) => setNome(evento.target.value)}
+      />
+    </label>
+  );
+}
 ~~~
 
-Nesse caso, cada item possui um identificador que funciona como chave.
+Nesse exemplo, value define o valor exibido e onChange informa ao React sobre as alterações feitas pela pessoa.
 
-## 3. O que caracteriza uma boa chave?
+## 3. Envio do formulário
 
-Uma boa chave deve ser única entre os elementos irmãos da lista, estável entre renderizações e associada ao item correto ao longo do tempo. Quando os dados possuem um identificador, normalmente ele é a melhor opção. A chave não precisa ser única em toda a aplicação, apenas entre os irmãos relevantes.
-
-## 4. Por que evitar índices como chave?
-
-Usar o índice do array como chave pode funcionar em listas estáticas. Entretanto, em listas que permitem inserção, remoção ou reordenação, os índices podem passar a representar itens diferentes.
-
-Isso pode levar o React a associar estado ou identidade ao item errado. Por esse motivo, prefira identificadores estáveis vindos dos dados.
-
-Também evite gerar chaves aleatórias a cada renderização: isso faz os itens parecerem novos a cada atualização.
-
-## 5. key não é uma prop comum
-
-A chave é utilizada internamente pelo React e não é disponibilizada automaticamente como uma prop comum ao componente filho. Se o componente também precisa do identificador, passe-o separadamente.
+O evento onSubmit permite tratar o envio. Quando a aplicação pretende processar os dados sem a navegação padrão do navegador, é comum chamar event.preventDefault() no manipulador.
 
 ~~~jsx
-<CardConceito key={conceito.id} id={conceito.id} titulo={conceito.titulo} />
+function aoEnviar(evento) {
+  evento.preventDefault();
+  // Processar os dados do formulário.
+}
 ~~~
 
-Aqui, key ajuda o React e id é um dado disponível para o componente.
+A lógica de envio pode validar os campos, apresentar mensagens e encaminhar os dados a um serviço.
 
-## 6. Listas e estado
+## 4. Validação
 
-Quando uma lista pode mudar, é importante que a estrutura de dados e as chaves continuem coerentes. Para inserir ou remover itens de um array mantido em estado, a abordagem comum é produzir um novo array, em vez de modificar diretamente o array existente.
+A validação pode ocorrer em diferentes camadas:
+
+- **HTML:** atributos como required, type="email" e minLength ajudam com validações básicas.
+- **Interface React:** permite apresentar mensagens específicas e orientar a pessoa.
+- **Servidor:** precisa validar os dados recebidos, pois as verificações no navegador podem ser contornadas.
+
+A validação deve ser compreensível, indicar o problema e ajudar a corrigi-lo.
+
+## 5. Acessibilidade
+
+Formulários acessíveis ajudam as pessoas a compreender e preencher os campos. Boas práticas incluem associar um label a cada campo, usar tipos de entrada adequados, informar erros por texto, preservar foco e ordem lógica de navegação e identificar claramente o botão de envio.
+
+## 6. Campos controlados e não controlados
+
+Em campos controlados, o estado React define o valor do campo. Em campos não controlados, o próprio elemento do DOM mantém o valor e ele pode ser lido quando necessário, por exemplo por meio de uma referência ou da API FormData.
+
+As duas abordagens são válidas em contextos diferentes. A escolha depende da complexidade, da validação e de como os dados serão utilizados.
 
 ## 7. Erros comuns
 
-- Esquecer a key.
-- Utilizar identificadores duplicados entre irmãos.
-- Usar índices em listas que mudam de ordem.
-- Gerar chaves aleatórias a cada renderização.
-- Esperar acessar key como uma prop comum no componente filho.
+- Definir value sem implementar a atualização correspondente.
+- Esquecer de tratar o envio e permitir uma navegação inesperada.
+- Não associar rótulos aos campos.
+- Validar apenas no cliente quando o dado será processado por um servidor.
+- Exibir mensagens genéricas que não ajudam a pessoa a corrigir o problema.
 
 ## Resumo
 
-map() permite converter dados em elementos React. key oferece uma identidade estável para cada item e ajuda o React a reconciliar corretamente listas que mudam.
+Formulários em React combinam elementos HTML, eventos e, frequentemente, estado. Campos controlados são úteis quando a aplicação precisa acompanhar os valores durante a digitação; validação e acessibilidade devem fazer parte do planejamento desde o início.
 
 ## Para refletir
 
-1. Qual é a finalidade da key?
-2. Por que um índice pode ser uma chave inadequada?
-3. Por que key não substitui uma prop id?
-4. Como chaves estáveis ajudam quando itens são reordenados?
+1. O que caracteriza um campo controlado?
+2. Qual é a função de onSubmit?
+3. Por que a validação do navegador não substitui a validação no servidor?
+4. Como tornar um formulário mais acessível?
 
 ## Referências
 
-- [React — Renderizando listas](https://react.dev/learn/rendering-lists)
-- [React — Preservando e redefinindo o estado](https://react.dev/learn/preserving-and-resetting-state)
+- [React — Respondendo a eventos](https://react.dev/learn/responding-to-events)
+- [React — Reagindo à entrada com estado](https://react.dev/learn/reacting-to-input-with-state)
+- [MDN — Elemento form](https://developer.mozilla.org/docs/Web/HTML/Element/form)
