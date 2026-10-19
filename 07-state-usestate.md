@@ -102,3 +102,58 @@ O estado permite que os componentes mantenham informações ao longo do tempo. u
 - [React — Adicionando interatividade](https://react.dev/learn/adding-interactivity)
 - [React — useState](https://react.dev/reference/react/useState)
 - [React — Atualizando objetos no estado](https://react.dev/learn/updating-objects-in-state)
+
+## Exemplos adicionais de código
+
+### Exemplo 1 — Alternar um menu
+~~~jsx
+import { useState } from "react";
+
+function Menu() {
+  const [aberto, setAberto] = useState(false);
+
+  return (
+    <section>
+      <button onClick={() => setAberto((valor) => !valor)}>
+        {aberto ? "Fechar menu" : "Abrir menu"}
+      </button>
+      {aberto && <nav><a href="/sobre">Sobre</a></nav>}
+    </section>
+  );
+}
+~~~
+
+### Exemplo 2 — Contador com incremento funcional
+~~~jsx
+import { useState } from "react";
+
+function ContadorPassos() {
+  const [passos, setPassos] = useState(0);
+
+  return (
+    <button onClick={() => setPassos((atual) => atual + 1)}>
+      Passos: {passos}
+    </button>
+  );
+}
+~~~
+
+### Exemplo 3 — Atualizar um array sem mutação
+~~~jsx
+import { useState } from "react";
+
+function ListaTarefas() {
+  const [tarefas, setTarefas] = useState(["Estudar JSX"]);
+
+  function adicionarTarefa() {
+    setTarefas((atuais) => [...atuais, "Estudar props"]);
+  }
+
+  return (
+    <section>
+      <button onClick={adicionarTarefa}>Adicionar tarefa</button>
+      <ul>{tarefas.map((tarefa, indice) => <li key={indice}>{tarefa}</li>)}</ul>
+    </section>
+  );
+}
+~~~
