@@ -100,3 +100,35 @@ Props são o mecanismo básico para configurar componentes e transportar dados d
 
 - [React — Passando props para um componente](https://react.dev/learn/passing-props-to-a-component)
 - [React — Passando JSX com children](https://react.dev/learn/passing-props-to-a-component#passing-jsx-as-children)
+
+## Exemplos adicionais de código
+
+### Exemplo 1 — Props com número e booleano
+~~~jsx
+function Progresso({ porcentagem, concluido }) {
+  return (
+    <p>
+      {porcentagem}% — {concluido ? "Concluído" : "Em andamento"}
+    </p>
+  );
+}
+
+// Uso: <Progresso porcentagem={60} concluido={false} />
+~~~
+
+### Exemplo 2 — Valor padrão
+~~~jsx
+function BotaoAcao({ texto = "Continuar" }) {
+  return <button>{texto}</button>;
+}
+~~~
+
+### Exemplo 3 — Passando um objeto por prop
+~~~jsx
+function PerfilAluno({ aluno }) {
+  return <p>{aluno.nome} — {aluno.curso}</p>;
+}
+
+const estudante = { nome: "Rafaela", curso: "ADS" };
+// Uso: <PerfilAluno aluno={estudante} />
+~~~
