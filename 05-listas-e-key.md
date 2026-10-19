@@ -87,3 +87,52 @@ map() permite converter dados em elementos React. key oferece uma identidade est
 
 - [React — Renderizando listas](https://react.dev/learn/rendering-lists)
 - [React — Preservando e redefinindo o estado](https://react.dev/learn/preserving-and-resetting-state)
+
+## Exemplos adicionais de código
+
+### Exemplo 1 — Lista de nomes
+~~~jsx
+const alunos = ["Ana", "Bruno", "Caio"];
+
+function ListaAlunos() {
+  return (
+    <ul>
+      {alunos.map((aluno) => <li key={aluno}>{aluno}</li>)}
+    </ul>
+  );
+}
+~~~
+
+### Exemplo 2 — Lista de objetos
+~~~jsx
+const aulas = [
+  { id: 1, titulo: "JSX" },
+  { id: 2, titulo: "Componentes" },
+  { id: 3, titulo: "Props" },
+];
+
+function ListaAulas() {
+  return (
+    <ul>
+      {aulas.map((aula) => (
+        <li key={aula.id}>{aula.titulo}</li>
+      ))}
+    </ul>
+  );
+}
+~~~
+
+### Exemplo 3 — Lista filtrada
+~~~jsx
+const conceitos = ["JSX", "Props", "State", "Hooks"];
+
+function ConceitosBasicos() {
+  const basicos = conceitos.filter((item) => item !== "Hooks");
+
+  return (
+    <ul>
+      {basicos.map((item) => <li key={item}>{item}</li>)}
+    </ul>
+  );
+}
+~~~
