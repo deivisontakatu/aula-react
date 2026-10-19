@@ -91,3 +91,44 @@ A renderização condicional permite adaptar a interface aos dados, ao estado e 
 
 - [React — Renderização condicional](https://react.dev/learn/conditional-rendering)
 - [MDN — Operador condicional (ternário)](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/Conditional_operator)
+
+## Exemplos adicionais de código
+
+### Exemplo 1 — Retorno antecipado
+~~~jsx
+function PainelUsuario({ usuario }) {
+  if (!usuario) {
+    return <p>Faça login para continuar.</p>;
+  }
+
+  return <p>Olá, {usuario.nome}!</p>;
+}
+~~~
+
+### Exemplo 2 — Ternário para alternar mensagens
+~~~jsx
+function ResultadoBusca({ carregando }) {
+  return (
+    <div>
+      {carregando ? <p>Buscando...</p> : <p>Busca finalizada.</p>}
+    </div>
+  );
+}
+~~~
+
+### Exemplo 3 — Mostrar uma lista vazia
+~~~jsx
+function ListaResultados({ resultados }) {
+  if (resultados.length === 0) {
+    return <p>Nenhum resultado encontrado.</p>;
+  }
+
+  return (
+    <ul>
+      {resultados.map((resultado) => (
+        <li key={resultado.id}>{resultado.nome}</li>
+      ))}
+    </ul>
+  );
+}
+~~~
