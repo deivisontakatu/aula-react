@@ -96,3 +96,34 @@ Componentes são os blocos fundamentais de uma interface React. Eles permitem de
 - [React — Seu primeiro componente](https://react.dev/learn/your-first-component)
 - [React — Importando e exportando componentes](https://react.dev/learn/importing-and-exporting-components)
 - [React — Passando props para um componente](https://react.dev/learn/passing-props-to-a-component)
+
+## Exemplos adicionais de código
+
+### Exemplo 1 — Componente de rodapé
+~~~jsx
+function Rodape() {
+  return <footer>React Lab — Material de estudo</footer>;
+}
+~~~
+
+### Exemplo 2 — Composição de componentes
+~~~jsx
+function App() {
+  return (
+    <main>
+      <Cabecalho />
+      <ConteudoPrincipal />
+      <Rodape />
+    </main>
+  );
+}
+~~~
+
+### Exemplo 3 — Componente com estrutura reutilizável
+~~~jsx
+function Secao({ children }) {
+  return <section className="secao">{children}</section>;
+}
+
+// Uso: <Secao><p>Conteúdo da aula</p></Secao>
+~~~
