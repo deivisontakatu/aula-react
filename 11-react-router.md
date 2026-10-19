@@ -82,3 +82,60 @@ React Router ajuda a organizar a navegação entre telas e a associar URLs a com
 
 - [Documentação oficial do React Router](https://reactrouter.com/)
 - [React Router — Tutorial](https://reactrouter.com/start/declarative/installation)
+
+## Exemplos adicionais de código
+
+Os exemplos usam a API declarativa comum de `react-router-dom`. Confira a documentação correspondente à versão instalada no projeto de demonstração.
+
+### Exemplo 1 — Configurar rotas básicas
+~~~jsx
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+function Inicio() {
+  return <h1>React Lab</h1>;
+}
+
+function Sobre() {
+  return <h1>Sobre o projeto</h1>;
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Inicio />} />
+        <Route path="/sobre" element={<Sobre />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+~~~
+
+### Exemplo 2 — Navegar usando Link
+~~~jsx
+import { Link } from "react-router-dom";
+
+function MenuPrincipal() {
+  return (
+    <nav>
+      <Link to="/">Início</Link>
+      {" | "}
+      <Link to="/sobre">Sobre</Link>
+    </nav>
+  );
+}
+~~~
+
+### Exemplo 3 — Ler um parâmetro da rota
+~~~jsx
+import { useParams } from "react-router-dom";
+
+function DetalheConceito() {
+  const { id } = useParams();
+
+  return <h1>Conceito selecionado: {id}</h1>;
+}
+
+// Dentro de <Routes>:
+// <Route path="/conceitos/:id" element={<DetalheConceito />} />
+~~~
