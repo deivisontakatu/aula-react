@@ -74,3 +74,41 @@ Virtual DOM é um modelo mental útil para entender como o React trabalha com de
 
 - [React — Renderização e confirmação](https://react.dev/learn/render-and-commit)
 - [React — Preservando e redefinindo o estado](https://react.dev/learn/preserving-and-resetting-state)
+
+## Exemplos adicionais de código
+
+Os exemplos a seguir ajudam a observar o modelo declarativo. Eles não acessam diretamente o Virtual DOM interno; mostram como a interface é descrita a partir dos dados.
+
+### Exemplo 1 — Interface derivada de uma variável
+~~~jsx
+function TituloCurso() {
+  const curso = "React para iniciantes";
+  return <h1>{curso}</h1>;
+}
+~~~
+
+### Exemplo 2 — Descrição da interface baseada em props
+~~~jsx
+function Mensagem({ texto }) {
+  return <p>{texto}</p>;
+}
+
+// Valores diferentes produzem descrições diferentes:
+// <Mensagem texto="Carregando..." />
+// <Mensagem texto="Dados carregados." />
+~~~
+
+### Exemplo 3 — Mudança solicitada por estado
+~~~jsx
+import { useState } from "react";
+
+function Alternador() {
+  const [ativo, setAtivo] = useState(false);
+
+  return (
+    <button onClick={() => setAtivo(!ativo)}>
+      {ativo ? "Ativo" : "Inativo"}
+    </button>
+  );
+}
+~~~
